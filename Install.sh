@@ -101,6 +101,21 @@ Decision Tweaked_BBR
 tput sgr0; clear
 normal_1; echo "Start Configuing Boot Script"
 wget https://raw.githubusercontent.com/iniwex5/Seedbox-Components/main/Miscellaneous/.boot-script.sh && chmod +x .boot-script.sh
+while true; do
+    read -p "Whether to disable tso and gso (Y/n): " choice
+    case "$choice" in
+        [yY]|"" )
+            break
+            ;;
+        [nN] )
+            sed -i '/\/sbin\/ethtool -K $interface tso off gso off/{N;d;}' .boot-script.sh
+            break
+            ;;
+        * )
+            echo "Choose again"
+            ;;
+    esac
+done
 cat << EOF > /etc/systemd/system/boot-script.service
 [Unit]
 Description=boot-script
